@@ -6,7 +6,7 @@
   <title>Software — HomeInspector.com</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -52,7 +52,8 @@
     }
 
     .logo {
-      font-size: 1.65rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem;
       font-weight: 800;
       color: var(--white);
       text-decoration: none;
@@ -913,6 +914,196 @@
       background-size: 12px 12px;
     }
 
+    /* ── AI SECTION ── */
+    .ai-section {
+      background: #EFF6FF;
+      padding: 6rem 2rem;
+    }
+
+    .ai-section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .ai-headline {
+      font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+      color: #0f172a;
+      margin-bottom: 1.1rem;
+    }
+
+    .ai-body {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1rem;
+      line-height: 1.75;
+      color: #475569;
+      margin-bottom: 1.5rem;
+    }
+
+    .ai-subheading {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.85rem;
+    }
+
+    .ai-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .ai-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.95rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .ai-bullets li::before {
+      content: '';
+      flex-shrink: 0;
+      margin-top: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(29, 78, 216, 0.1);
+      border: 1.5px solid rgba(29, 78, 216, 0.4);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 6l2.5 2.5 4.5-5' stroke='%231d4ed8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 12px 12px;
+    }
+
+    .video-card {
+      background: #111827;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      margin-bottom: 1.25rem;
+    }
+
+    .video-card-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    }
+
+    .video-card-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .play-btn {
+      position: relative;
+      z-index: 2;
+      width: 64px;
+      height: 64px;
+      background: #FF0000;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(255,0,0,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 12px 32px rgba(255,0,0,0.55);
+    }
+
+    .play-btn svg {
+      width: 28px;
+      height: 28px;
+      fill: white;
+      margin-left: 4px;
+    }
+
+    .video-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 1.25rem;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      color: white;
+      font-size: 0.88rem;
+      font-weight: 600;
+      z-index: 2;
+    }
+
+    .watch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background: white;
+      color: #0f172a;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 1.75rem;
+    }
+
+    .watch-btn:hover {
+      border-color: #94a3b8;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .watch-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .ai-testimonial {
+      border-left: 3px solid #1d4ed8;
+      padding-left: 1.1rem;
+    }
+
+    .ai-testimonial blockquote {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #334155;
+      margin-bottom: 0.5rem;
+    }
+
+    .ai-testimonial-attr {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1d4ed8;
+    }
+
+    @media (max-width: 900px) {
+      .ai-section-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+    }
+
     /* ── SECTION DIVIDER ── */
     .section-divider {
       max-width: 1200px;
@@ -964,13 +1155,19 @@
             </a>
           </div>
         </li>
-        <li><a href="#">Pricing</a></li>
-        <li><a href="#">Reports</a></li>
-        <li><a href="#">About</a></li>
+        <li class="nav-item-dropdown">
+          <a href="#">Reports</a>
+          <div class="nav-dropdown">
+            <a href="reports.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">See a Sample Report</div>
+              <div class="nav-dropdown-desc">See what HomeInspector.com can do with real reports from our inspectors</div>
+            </a>
+          </div>
+        </li>
       </ul>
 
       <div class="nav-actions">
-        <a href="#" class="btn-login">Log in</a>
+        <a href="login.html" class="btn-login">Log in</a>
         <a href="signup.html" class="btn-nav-trial">Sign-up for Free</a>
       </div>
 
@@ -981,10 +1178,9 @@
 
     <div class="mobile-menu" id="mobileMenu">
       <a href="#">Product</a>
-      <a href="#">Pricing</a>
-      <a href="#">Reports</a>
-      <a href="#">About</a>
-      <a href="#">Log in</a>
+      <a href="reports.html">Reports</a>
+
+      <a href="login.html">Log in</a>
       <a href="signup.html">Sign-up for Free</a>
     </div>
   </nav>
@@ -1392,6 +1588,46 @@
       </div>
 
     </div>
+
+    <!-- AI REPORT WRITING SECTION -->
+    <section class="ai-section">
+      <div class="ai-section-inner">
+
+        <!-- LEFT: Text -->
+        <div>
+          <h2 class="ai-headline">Write Better Reports in Half the Time</h2>
+          <p class="ai-body">HomeInspector.com helps you write clear, professional comments faster while keeping you fully in control. AI-powered tools and proven templates give you a professional starting point so you spend less time typing and more time focused on inspections and growth.</p>
+          <p class="ai-subheading">Key Features:</p>
+          <ul class="ai-bullets">
+            <li>AI powered comment writing built for inspectors</li>
+            <li>Buyer and agent friendly language suggestions</li>
+            <li>Consistent comments across every report</li>
+            <li>Templates built for real inspection workflows</li>
+          </ul>
+        </div>
+
+        <!-- RIGHT: Video + Testimonial -->
+        <div>
+          <div class="video-card">
+            <div class="video-card-bg"></div>
+            <div class="video-card-grid"></div>
+            <div class="play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="video-label">Demo: HomeInspector.com AI Report Writing</div>
+          </div>
+          <a href="#" class="watch-btn">
+            <svg viewBox="0 0 24 24" fill="#FF0000"><path d="M21.8 8s-.2-1.4-.8-2c-.8-.8-1.6-.8-2-.9C16.4 5 12 5 12 5s-4.4 0-7 .1c-.4.1-1.2.1-2 .9-.6.6-.8 2-.8 2S2 9.6 2 11.2v1.5c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.8.8 1.8.8 2.2.8C6.8 19 12 19 12 19s4.4 0 7-.2c.4-.1 1.2-.1 2-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.5C22 9.6 21.8 8 21.8 8zM10 14.5v-5l5.5 2.5-5.5 2.5z"/></svg>
+            Watch on YouTube
+          </a>
+          <div class="ai-testimonial">
+            <blockquote>"All of our inspectors have gained up to one hour per inspection back into their schedules."</blockquote>
+            <div class="ai-testimonial-attr">Michael P. | Metro Property Inspection</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
 
   </div>
 

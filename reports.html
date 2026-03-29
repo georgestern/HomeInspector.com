@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sample Reports — HomeInspector.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1B4F8A;
+      --navy-light: #1E5BA8;
+      --navy-border: #2d6fbe;
+      --accent: #93c5fd;
+      --blue-outline: #38bdf8;
+      --green: #22c55e;
+      --green-hover: #16a34a;
+      --white: #ffffff;
+      --gray: #94a3b8;
+      --gray-dim: #64748b;
+      /* page-specific light palette */
+      --page-bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-dark: #0f172a;
+      --text-mid: #334155;
+      --text-muted: #64748b;
+      --border-light: #e2e8f0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--page-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(27, 79, 138, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--white);
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-size: 1.27rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-item-dropdown { position: relative; }
+
+    .nav-dropdown {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+      padding: 0.4rem;
+      min-width: 330px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease 0.1s, transform 0.2s ease 0.1s;
+      z-index: 200;
+    }
+
+    .nav-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -18px; left: 0; right: 0;
+      height: 18px;
+    }
+
+    .nav-item-dropdown:hover .nav-dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-dropdown-item {
+      display: block;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .nav-dropdown-item:hover { background: #f1f5f9; }
+    .nav-dropdown-item::after { display: none; }
+
+    .nav-dropdown-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1B4F8A;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-dropdown-desc {
+      font-size: 0.78rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .btn-login {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-login:hover { color: var(--white); }
+
+    .btn-nav-trial {
+      padding: 0.5rem 1.1rem;
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-nav-trial:hover { background: rgba(255,255,255,0.14); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: var(--navy-light);
+      border-top: 1px solid var(--navy-border);
+      padding: 1rem 2rem 1.5rem;
+      gap: 1rem;
+    }
+
+    .mobile-menu a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--navy-border);
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover { color: var(--white); }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu.open { display: flex; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-actions { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ── PAGE ── */
+    .page-wrap {
+      padding-top: 68px;
+    }
+
+    /* ── HEADER ── */
+    .reports-header {
+      text-align: center;
+      padding: 5rem 2rem 3.5rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .reports-eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--navy);
+      background: rgba(27,79,138,0.08);
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 1.25rem;
+    }
+
+    .reports-headline {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      color: var(--text-dark);
+    }
+
+    /* ── GRID ── */
+    .reports-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    /* ── REPORT CARD ── */
+    .report-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .report-card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+
+    /* ── REPORT MOCKUP (inside card) ── */
+    .report-mockup {
+      width: 100%;
+      background: #0a1929;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .report-chrome {
+      background: #0f2233;
+      padding: 0.5rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-shrink: 0;
+      border-bottom: 1px solid #1d3347;
+    }
+
+    .r-dots { display: flex; gap: 5px; flex-shrink: 0; }
+    .r-dots span { width: 9px; height: 9px; border-radius: 50%; }
+    .r-dot-r { background: #ff5f57; }
+    .r-dot-y { background: #febc2e; }
+    .r-dot-g { background: #28c840; }
+
+    .r-url {
+      flex: 1;
+      background: #1B4F8A;
+      border: 1px solid #253c52;
+      border-radius: 4px;
+      padding: 0.2rem 0.65rem;
+      font-size: 0.6rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .r-url svg { width: 8px; height: 8px; opacity: 0.5; flex-shrink: 0; }
+
+    /* Report header bar */
+    .report-header-bar {
+      background: #ffffff;
+      padding: 0.55rem 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+
+    .rh-logo {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: #1B4F8A;
+      letter-spacing: -0.3px;
+    }
+
+    .rh-address {
+      font-size: 0.58rem;
+      font-weight: 600;
+      color: #334155;
+      text-align: center;
+    }
+
+    .rh-address span {
+      display: block;
+      font-weight: 400;
+      color: #64748b;
+      font-size: 0.52rem;
+    }
+
+    .rh-status {
+      font-size: 0.52rem;
+      font-weight: 700;
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.12);
+      color: #16a34a;
+      border: 1px solid rgba(34,197,94,0.25);
+    }
+
+    /* Report body: sidebar + main */
+    .report-body {
+      display: flex;
+      flex: 1;
+      background: #f8fafc;
+    }
+
+    .report-sidebar {
+      width: 120px;
+      flex-shrink: 0;
+      background: #1e293b;
+      display: flex;
+      flex-direction: column;
+      padding: 0.5rem 0;
+    }
+
+    .rs-section-label {
+      font-size: 0.45rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #475569;
+      padding: 0 0.6rem 0.35rem;
+    }
+
+    .rs-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.28rem 0.6rem;
+      font-size: 0.55rem;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .rs-item:hover { background: rgba(255,255,255,0.04); }
+
+    .rs-item.active {
+      background: rgba(147,197,253,0.1);
+      color: #93c5fd;
+      border-left: 2px solid #93c5fd;
+    }
+
+    .rs-item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .rs-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .rs-dot.pass  { background: #22c55e; }
+    .rs-dot.warn  { background: #f59e0b; }
+    .rs-dot.fail  { background: #ef4444; }
+    .rs-dot.empty { background: #475569; }
+
+    .rs-count {
+      font-size: 0.44rem;
+      color: #475569;
+    }
+
+    /* Main report content */
+    .report-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .report-photo-strip {
+      height: 72px;
+      background: linear-gradient(160deg, #1a3a55 0%, #0d2a40 50%, #0a1f30 100%);
+      position: relative;
+      flex-shrink: 0;
+      display: flex;
+      align-items: flex-end;
+      padding: 0.4rem 0.6rem;
+    }
+
+    .rp-house-svg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.15;
+    }
+
+    .rp-caption {
+      position: relative;
+      z-index: 1;
+      font-size: 0.48rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.3;
+    }
+
+    .rp-inspector-badge {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(0,0,0,0.45);
+      border-radius: 6px;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .rp-avatar {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e4060, #2a5a80);
+      border: 1px solid #2a4a65;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.4rem;
+      font-weight: 700;
+      color: #93c5fd;
+      flex-shrink: 0;
+    }
+
+    .rp-name {
+      font-size: 0.48rem;
+      color: rgba(255,255,255,0.85);
+      font-weight: 600;
+    }
+
+    /* Inspection item rows */
+    .report-items {
+      flex: 1;
+      padding: 0.5rem 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      background: #ffffff;
+    }
+
+    .ri-section-title {
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: #1B4F8A;
+      letter-spacing: 0.04em;
+      padding-bottom: 0.2rem;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 0.1rem;
+    }
+
+    .ri-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.22rem 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .ri-status {
+      width: 36px;
+      flex-shrink: 0;
+      font-size: 0.42rem;
+      font-weight: 700;
+      padding: 0.12rem 0.3rem;
+      border-radius: 3px;
+      text-align: center;
+    }
+
+    .ri-status.pass { background: rgba(34,197,94,0.1); color: #16a34a; }
+    .ri-status.imp  { background: rgba(245,158,11,0.1); color: #d97706; }
+    .ri-status.rep  { background: rgba(239,68,68,0.1);  color: #dc2626; }
+    .ri-status.na   { background: #f1f5f9; color: #94a3b8; }
+
+    .ri-label {
+      font-size: 0.52rem;
+      color: #334155;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ri-arrow {
+      font-size: 0.4rem;
+      color: #cbd5e1;
+      flex-shrink: 0;
+    }
+
+    /* ── CARD FOOTER ── */
+    .report-card-footer {
+      padding: 1.25rem 1.5rem;
+    }
+
+    .report-card-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 1.1rem;
+    }
+
+    .btn-view-report {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-view-report:hover {
+      background: var(--navy-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-view-report svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .reports-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── SOCIAL PROOF BAR ── */
+    .social-proof {
+      background: #2563a8;
+      padding: 4rem 0 3.5rem;
+      overflow: hidden;
+    }
+    .social-proof-label {
+      text-align: center;
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1.7rem;
+      font-style: italic;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      margin-bottom: 2.5rem;
+      padding: 0 2rem;
+    }
+    .social-proof-track-wrap { overflow: hidden; width: 100%; }
+    .social-proof-track {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      width: max-content;
+      animation: ticker 28s linear infinite;
+    }
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .fake-logo { flex-shrink: 0; opacity: 0.7; white-space: nowrap; user-select: none; line-height: 1; }
+    .fake-logo.style-a { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--white); letter-spacing: -0.5px; }
+    .fake-logo.style-b { font-family: 'Lora', Georgia, serif; font-size: 1.05rem; font-weight: 600; font-style: italic; color: var(--accent); }
+    .fake-logo.style-c { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); }
+    .fake-logo.style-d { font-family: Georgia, serif; font-size: 1.1rem; font-weight: 400; color: #cbd5e1; }
+    .fake-logo.style-e { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 1rem; font-weight: 300; letter-spacing: 0.06em; color: var(--white); }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-inner">
+      <a href="homeinspector.html" class="logo">HomeInspector.com</a>
+
+      <ul class="nav-links">
+        <li class="nav-item-dropdown">
+          <a href="#">Product</a>
+          <div class="nav-dropdown">
+            <a href="software.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Software</div>
+              <div class="nav-dropdown-desc">Report writing, business management, and more for every type of home inspector</div>
+            </a>
+            <a href="website.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Website</div>
+              <div class="nav-dropdown-desc">Stand-alone websites that get you more business</div>
+            </a>
+          </div>
+        </li>
+        <li class="nav-item-dropdown">
+          <a href="#">Reports</a>
+          <div class="nav-dropdown">
+            <a href="reports.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">See a Sample Report</div>
+              <div class="nav-dropdown-desc">See what HomeInspector.com can do with real reports from our inspectors</div>
+            </a>
+          </div>
+        </li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn-login">Log in</a>
+        <a href="signup.html" class="btn-nav-trial">Sign-up for Free</a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#">Product</a>
+      <a href="#">Reports</a>
+      <a href="login.html">Log in</a>
+      <a href="signup.html">Sign-up for Free</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+
+    <header class="reports-header">
+      <div class="reports-eyebrow">Sample Reports</div>
+      <h1 class="reports-headline">Check out these sample reports<br>from real inspectors.</h1>
+    </header>
+
+    <div class="reports-grid">
+
+      <!-- ── CARD 1 ── -->
+      <div class="report-card">
+        <div class="report-mockup">
+          <!-- Browser chrome -->
+          <div class="report-chrome">
+            <div class="r-dots">
+              <span class="r-dot-r"></span>
+              <span class="r-dot-y"></span>
+              <span class="r-dot-g"></span>
+            </div>
+            <div class="r-url">
+              <svg viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
+              reports.homeinspector.com/r/4821
+            </div>
+          </div>
+
+          <!-- Report header -->
+          <div class="report-header-bar">
+            <div class="rh-logo">HomeInspector</div>
+            <div class="rh-address">
+              123 Maple Street, Austin TX
+              <span>James Mitchell · Mar 28, 2026</span>
+            </div>
+            <div class="rh-status">Complete</div>
+          </div>
+
+          <!-- Report body -->
+          <div class="report-body">
+            <div class="report-sidebar">
+              <div class="rs-section-label">Sections</div>
+              <div class="rs-item active">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Grounds</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Roof</div>
+                <div class="rs-count">5</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Exterior</div>
+                <div class="rs-count">7</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Kitchen</div>
+                <div class="rs-count">4</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Bathrooms</div>
+                <div class="rs-count">6</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Interior Areas</div>
+                <div class="rs-count">8</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot fail"></div> Heating</div>
+                <div class="rs-count">2</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Cooling</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Water Heater</div>
+                <div class="rs-count">2</div>
+              </div>
+            </div>
+
+            <div class="report-main">
+              <div class="report-photo-strip">
+                <div class="rp-house-svg">
+                  <svg width="90" height="72" viewBox="0 0 120 95" fill="none">
+                    <polygon points="60,5 115,40 5,40" fill="white"/>
+                    <rect x="10" y="38" width="100" height="55" fill="white"/>
+                    <rect x="45" y="60" width="30" height="33" fill="#1B4F8A"/>
+                    <rect x="18" y="50" width="20" height="18" fill="#1B4F8A"/>
+                    <rect x="82" y="50" width="20" height="18" fill="#1B4F8A"/>
+                  </svg>
+                </div>
+                <div class="rp-caption">Front elevation<br>123 Maple St.</div>
+                <div class="rp-inspector-badge">
+                  <div class="rp-avatar">JM</div>
+                  <div class="rp-name">James Mitchell</div>
+                </div>
+              </div>
+              <div class="report-items">
+                <div class="ri-section-title">Grounds</div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Driveway &amp; Walkways</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Vegetation &amp; Grading</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status imp">Improve</div>
+                  <div class="ri-label">Retaining Wall — Minor cracking</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Fencing &amp; Gates</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status na">N/A</div>
+                  <div class="ri-label">Pool / Spa</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-card-footer">
+          <p class="report-card-desc">A streamlined report with informative diagrams and Standards of Practice — ideal for single-family residential inspections.</p>
+          <a href="#" class="btn-view-report">
+            View Report
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── CARD 2 ── -->
+      <div class="report-card">
+        <div class="report-mockup">
+          <div class="report-chrome">
+            <div class="r-dots">
+              <span class="r-dot-r"></span>
+              <span class="r-dot-y"></span>
+              <span class="r-dot-g"></span>
+            </div>
+            <div class="r-url">
+              <svg viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
+              reports.homeinspector.com/r/5193
+            </div>
+          </div>
+
+          <div class="report-header-bar">
+            <div class="rh-logo">HomeInspector</div>
+            <div class="rh-address">
+              47 Birchwood Lane, Denver CO
+              <span>Sarah Chen · Apr 2, 2026</span>
+            </div>
+            <div class="rh-status">Complete</div>
+          </div>
+
+          <div class="report-body">
+            <div class="report-sidebar">
+              <div class="rs-section-label">Sections</div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Grounds</div>
+                <div class="rs-count">4</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Roof</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot fail"></div> Exterior</div>
+                <div class="rs-count">6</div>
+              </div>
+              <div class="rs-item active">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Kitchen</div>
+                <div class="rs-count">5</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Bathrooms</div>
+                <div class="rs-count">4</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Interior Areas</div>
+                <div class="rs-count">9</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Heating</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Cooling</div>
+                <div class="rs-count">2</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Water Heater</div>
+                <div class="rs-count">2</div>
+              </div>
+            </div>
+
+            <div class="report-main">
+              <div class="report-photo-strip">
+                <div class="rp-house-svg">
+                  <svg width="90" height="72" viewBox="0 0 120 95" fill="none">
+                    <polygon points="60,5 115,40 5,40" fill="white"/>
+                    <rect x="10" y="38" width="100" height="55" fill="white"/>
+                    <rect x="45" y="60" width="30" height="33" fill="#1B4F8A"/>
+                    <rect x="18" y="50" width="20" height="18" fill="#1B4F8A"/>
+                    <rect x="82" y="50" width="20" height="18" fill="#1B4F8A"/>
+                  </svg>
+                </div>
+                <div class="rp-caption">Front elevation<br>47 Birchwood Ln.</div>
+                <div class="rp-inspector-badge">
+                  <div class="rp-avatar">SC</div>
+                  <div class="rp-name">Sarah Chen</div>
+                </div>
+              </div>
+              <div class="report-items">
+                <div class="ri-section-title">Kitchen</div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Cabinets &amp; Countertops</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status imp">Improve</div>
+                  <div class="ri-label">Dishwasher — Seal worn</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Range / Oven</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status imp">Improve</div>
+                  <div class="ri-label">GFCI Outlets — Not present</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Ventilation / Exhaust Fan</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-card-footer">
+          <p class="report-card-desc">A detailed multi-section report with photo documentation and prioritized deficiencies — perfect for buyers and their agents.</p>
+          <a href="#" class="btn-view-report">
+            View Report
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── CARD 3 ── -->
+      <div class="report-card">
+        <div class="report-mockup">
+          <div class="report-chrome">
+            <div class="r-dots">
+              <span class="r-dot-r"></span>
+              <span class="r-dot-y"></span>
+              <span class="r-dot-g"></span>
+            </div>
+            <div class="r-url">
+              <svg viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
+              reports.homeinspector.com/r/6047
+            </div>
+          </div>
+
+          <div class="report-header-bar">
+            <div class="rh-logo">HomeInspector</div>
+            <div class="rh-address">
+              891 Crestview Dr., Nashville TN
+              <span>Marcus Taylor · Apr 10, 2026</span>
+            </div>
+            <div class="rh-status">Complete</div>
+          </div>
+
+          <div class="report-body">
+            <div class="report-sidebar">
+              <div class="rs-section-label">Sections</div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Grounds</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot fail"></div> Roof</div>
+                <div class="rs-count">4</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Exterior</div>
+                <div class="rs-count">5</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Kitchen</div>
+                <div class="rs-count">4</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Bathrooms</div>
+                <div class="rs-count">5</div>
+              </div>
+              <div class="rs-item active">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Interior Areas</div>
+                <div class="rs-count">7</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Heating</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Cooling</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Water Heater</div>
+                <div class="rs-count">2</div>
+              </div>
+            </div>
+
+            <div class="report-main">
+              <div class="report-photo-strip">
+                <div class="rp-house-svg">
+                  <svg width="90" height="72" viewBox="0 0 120 95" fill="none">
+                    <polygon points="60,5 115,40 5,40" fill="white"/>
+                    <rect x="10" y="38" width="100" height="55" fill="white"/>
+                    <rect x="45" y="60" width="30" height="33" fill="#1B4F8A"/>
+                    <rect x="18" y="50" width="20" height="18" fill="#1B4F8A"/>
+                    <rect x="82" y="50" width="20" height="18" fill="#1B4F8A"/>
+                  </svg>
+                </div>
+                <div class="rp-caption">Front elevation<br>891 Crestview Dr.</div>
+                <div class="rp-inspector-badge">
+                  <div class="rp-avatar">MT</div>
+                  <div class="rp-name">Marcus Taylor</div>
+                </div>
+              </div>
+              <div class="report-items">
+                <div class="ri-section-title">Interior Areas</div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Walls, Ceilings &amp; Floors</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status rep">Repair</div>
+                  <div class="ri-label">Staircase — Handrail loose</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status imp">Improve</div>
+                  <div class="ri-label">Windows — Fogged glazing</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Doors &amp; Hardware</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Smoke &amp; CO Detectors</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-card-footer">
+          <p class="report-card-desc">A comprehensive report covering all major systems with clear pass/repair/improve status — built for fast turnaround and easy client review.</p>
+          <a href="#" class="btn-view-report">
+            View Report
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── CARD 4 ── -->
+      <div class="report-card">
+        <div class="report-mockup">
+          <div class="report-chrome">
+            <div class="r-dots">
+              <span class="r-dot-r"></span>
+              <span class="r-dot-y"></span>
+              <span class="r-dot-g"></span>
+            </div>
+            <div class="r-url">
+              <svg viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
+              reports.homeinspector.com/r/7208
+            </div>
+          </div>
+
+          <div class="report-header-bar">
+            <div class="rh-logo">HomeInspector</div>
+            <div class="rh-address">
+              14 Oakwood Ct., Portland OR
+              <span>Linda Reeves · Apr 14, 2026</span>
+            </div>
+            <div class="rh-status">Complete</div>
+          </div>
+
+          <div class="report-body">
+            <div class="report-sidebar">
+              <div class="rs-section-label">Sections</div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Grounds</div>
+                <div class="rs-count">5</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Roof</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Exterior</div>
+                <div class="rs-count">6</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Kitchen</div>
+                <div class="rs-count">5</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot fail"></div> Bathrooms</div>
+                <div class="rs-count">4</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Interior Areas</div>
+                <div class="rs-count">6</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot warn"></div> Heating</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item active">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Cooling</div>
+                <div class="rs-count">3</div>
+              </div>
+              <div class="rs-item">
+                <div class="rs-item-left"><div class="rs-dot pass"></div> Water Heater</div>
+                <div class="rs-count">2</div>
+              </div>
+            </div>
+
+            <div class="report-main">
+              <div class="report-photo-strip">
+                <div class="rp-house-svg">
+                  <svg width="90" height="72" viewBox="0 0 120 95" fill="none">
+                    <polygon points="60,5 115,40 5,40" fill="white"/>
+                    <rect x="10" y="38" width="100" height="55" fill="white"/>
+                    <rect x="45" y="60" width="30" height="33" fill="#1B4F8A"/>
+                    <rect x="18" y="50" width="20" height="18" fill="#1B4F8A"/>
+                    <rect x="82" y="50" width="20" height="18" fill="#1B4F8A"/>
+                  </svg>
+                </div>
+                <div class="rp-caption">Front elevation<br>14 Oakwood Ct.</div>
+                <div class="rp-inspector-badge">
+                  <div class="rp-avatar">LR</div>
+                  <div class="rp-name">Linda Reeves</div>
+                </div>
+              </div>
+              <div class="report-items">
+                <div class="ri-section-title">Cooling</div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">AC Condenser Unit</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Air Handler / Coil</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Ductwork &amp; Supply Registers</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status na">N/A</div>
+                  <div class="ri-label">Evaporative Cooler</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+                <div class="ri-row">
+                  <div class="ri-status pass">Pass</div>
+                  <div class="ri-label">Thermostat Operation</div>
+                  <div class="ri-arrow">›</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-card-footer">
+          <p class="report-card-desc">A clean, agent-friendly report with summary dashboard and exportable PDF — designed to close deals faster and build lasting client trust.</p>
+          <a href="#" class="btn-view-report">
+            View Report
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  </script>
+
+</body>
+</html>

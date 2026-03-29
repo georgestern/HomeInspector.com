@@ -6,7 +6,7 @@
   <title>Website — HomeInspector.com</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -52,7 +52,8 @@
     }
 
     .logo {
-      font-size: 1.65rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem;
       font-weight: 800;
       color: var(--white);
       text-decoration: none;
@@ -938,6 +939,41 @@
       .devices-container { padding-right: 0; }
       .phone-wrap { display: none; }
     }
+
+    /* ── SOCIAL PROOF BAR ── */
+    .social-proof {
+      background: #2563a8;
+      padding: 4rem 0 3.5rem;
+      overflow: hidden;
+    }
+    .social-proof-label {
+      text-align: center;
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1.7rem;
+      font-style: italic;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      margin-bottom: 2.5rem;
+      padding: 0 2rem;
+    }
+    .social-proof-track-wrap { overflow: hidden; width: 100%; }
+    .social-proof-track {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      width: max-content;
+      animation: ticker 28s linear infinite;
+    }
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .fake-logo { flex-shrink: 0; opacity: 0.7; white-space: nowrap; user-select: none; line-height: 1; }
+    .fake-logo.style-a { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--white); letter-spacing: -0.5px; }
+    .fake-logo.style-b { font-family: 'Lora', Georgia, serif; font-size: 1.05rem; font-weight: 600; font-style: italic; color: var(--accent); }
+    .fake-logo.style-c { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); }
+    .fake-logo.style-d { font-family: Georgia, serif; font-size: 1.1rem; font-weight: 400; color: #cbd5e1; }
+    .fake-logo.style-e { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 1rem; font-weight: 300; letter-spacing: 0.06em; color: var(--white); }
   </style>
 </head>
 <body>
@@ -961,13 +997,19 @@
             </a>
           </div>
         </li>
-        <li><a href="#">Pricing</a></li>
-        <li><a href="#">Reports</a></li>
-        <li><a href="#">About</a></li>
+        <li class="nav-item-dropdown">
+          <a href="#">Reports</a>
+          <div class="nav-dropdown">
+            <a href="reports.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">See a Sample Report</div>
+              <div class="nav-dropdown-desc">See what HomeInspector.com can do with real reports from our inspectors</div>
+            </a>
+          </div>
+        </li>
       </ul>
 
       <div class="nav-actions">
-        <a href="#" class="btn-login">Log in</a>
+        <a href="login.html" class="btn-login">Log in</a>
         <a href="signup.html" class="btn-nav-trial">Sign-up for Free</a>
       </div>
 
@@ -978,10 +1020,8 @@
 
     <div class="mobile-menu" id="mobileMenu">
       <a href="#">Product</a>
-      <a href="#">Pricing</a>
       <a href="#">Reports</a>
-      <a href="#">About</a>
-      <a href="#">Log in</a>
+      <a href="login.html">Log in</a>
       <a href="signup.html">Sign-up for Free</a>
     </div>
   </nav>
@@ -996,7 +1036,7 @@
 
         <h1 class="hero-title">
           Websites for Home Inspectors.<br>
-          <span class="accent">Built Right.</span>
+          Personalized for <span class="accent">Your Business.</span>
         </h1>
 
         <p class="hero-sub">
@@ -1004,7 +1044,7 @@
         </p>
 
         <div class="hero-ctas">
-          <a href="#" class="btn-primary">Get Started Now</a>
+          <a href="signup.html" class="btn-primary">Sign-up for Free</a>
           <a href="#" class="btn-outline">Book a Call</a>
         </div>
       </div>
@@ -1133,7 +1173,7 @@
 
   <!-- PRICING SECTION -->
   <section class="pricing-section">
-    <h2 class="pricing-headline">Pick the Website That Fits Your Business</h2>
+    <h2 class="pricing-headline">Build a website that fits your business. <span class="accent">For Free.</span></h2>
 
     <div class="pricing-card-wrap">
       <div class="pricing-card">

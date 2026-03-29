@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In — HomeInspector.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1B4F8A;
+      --navy-light: #1E5BA8;
+      --navy-border: #2d6fbe;
+      --accent: #93c5fd;
+      --green: #22c55e;
+      --green-hover: #16a34a;
+      --white: #ffffff;
+      --gray: #94a3b8;
+      --gray-dim: #64748b;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(27, 79, 138, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--white);
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-size: 1.27rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-item-dropdown { position: relative; }
+
+    .nav-dropdown {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+      padding: 0.4rem;
+      min-width: 330px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease 0.1s, transform 0.2s ease 0.1s;
+      z-index: 200;
+    }
+
+    .nav-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -18px; left: 0; right: 0;
+      height: 18px;
+    }
+
+    .nav-item-dropdown:hover .nav-dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-dropdown-item {
+      display: block;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .nav-dropdown-item:hover { background: #f1f5f9; }
+    .nav-dropdown-item::after { display: none; }
+
+    .nav-dropdown-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1B4F8A;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-dropdown-desc {
+      font-size: 0.78rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .btn-login {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-login:hover { color: var(--white); }
+
+    .btn-nav-trial {
+      padding: 0.5rem 1.1rem;
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-nav-trial:hover { background: rgba(255,255,255,0.14); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: var(--navy-light);
+      border-top: 1px solid var(--navy-border);
+      padding: 1rem 2rem 1.5rem;
+      gap: 1rem;
+    }
+
+    .mobile-menu a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--navy-border);
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover { color: var(--white); }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu.open { display: flex; }
+
+    /* ── PAGE ── */
+    .page-wrap {
+      padding-top: 68px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 4rem;
+    }
+
+    /* ── CARD ── */
+    .login-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2.5rem 2.25rem 2rem;
+      width: 100%;
+      max-width: 440px;
+      margin: 2rem 1rem;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.35);
+      color: #0f172a;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #f1f5f9;
+      color: #64748b;
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .close-btn:hover { background: #e2e8f0; color: #0f172a; }
+
+    .login-headline {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.4rem;
+    }
+
+    .login-sub {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 1.75rem;
+    }
+
+    /* ── FORM ── */
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-field label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .form-field input {
+      padding: 0.7rem 0.9rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #0f172a;
+      background: #f8fafc;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .form-field input:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(27,79,138,0.12);
+      background: #fff;
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .btn-login-submit:hover { background: var(--green-hover); }
+
+    .error-msg {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 0.65rem 0.9rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      color: #dc2626;
+    }
+
+    .error-msg.visible { display: block; }
+
+    .login-footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .login-footer a {
+      color: var(--navy);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-actions { display: none; }
+      .hamburger { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-inner">
+      <a href="homeinspector.html" class="logo">HomeInspector.com</a>
+
+      <ul class="nav-links">
+        <li class="nav-item-dropdown">
+          <a href="#">Product</a>
+          <div class="nav-dropdown">
+            <a href="software.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Software</div>
+              <div class="nav-dropdown-desc">Report writing, business management, and more for every type of home inspector</div>
+            </a>
+            <a href="website.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Website</div>
+              <div class="nav-dropdown-desc">Stand-alone websites that get you more business</div>
+            </a>
+          </div>
+        </li>
+        <li class="nav-item-dropdown">
+          <a href="#">Reports</a>
+          <div class="nav-dropdown">
+            <a href="reports.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">See a Sample Report</div>
+              <div class="nav-dropdown-desc">See what HomeInspector.com can do with real reports from our inspectors</div>
+            </a>
+          </div>
+        </li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn-login">Log in</a>
+        <a href="signup.html" class="btn-nav-trial">Sign-up for Free</a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#">Product</a>
+      <a href="#">Reports</a>
+      <a href="login.html">Log in</a>
+      <a href="signup.html">Sign-up for Free</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="login-card">
+
+      <button class="close-btn" onclick="history.back()" aria-label="Close">&#x2715;</button>
+
+      <h1 class="login-headline">Welcome back</h1>
+      <p class="login-sub">Log in to your HomeInspector.com account</p>
+
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <button class="btn-login-submit" id="loginBtn">Log In</button>
+
+      <div class="error-msg" id="errorMsg">Incorrect email or password.</div>
+
+      <p class="login-footer">Don't have an account? <a href="signup.html">Sign up for free</a></p>
+
+    </div>
+  </div>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+
+    const DEMO_EMAIL = 'demo@homeinspector.com';
+    const DEMO_PASSWORD = 'demo123';
+
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
+        window.location.href = 'dashboard.html';
+      } else {
+        errorMsg.classList.add('visible');
+      }
+    });
+
+    // Hide error when user starts typing again
+    document.getElementById('email').addEventListener('input', () => {
+      document.getElementById('errorMsg').classList.remove('visible');
+    });
+    document.getElementById('password').addEventListener('input', () => {
+      document.getElementById('errorMsg').classList.remove('visible');
+    });
+
+    // Allow Enter key to submit
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('loginBtn').click();
+    });
+  </script>
+
+</body>
+</html>

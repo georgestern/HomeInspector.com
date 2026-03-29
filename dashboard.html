@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — HomeInspector.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1B4F8A;
+      --navy-light: #1E5BA8;
+      --navy-border: #2d6fbe;
+      --navy-dark: #153d6e;
+      --accent: #93c5fd;
+      --green: #22c55e;
+      --green-hover: #16a34a;
+      --white: #ffffff;
+      --gray: #94a3b8;
+      --gray-dim: #64748b;
+      --sidebar-width: 220px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(27, 79, 138, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .nav-inner {
+      max-width: 100%;
+      padding: 0 2rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--white);
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-user-name {
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+
+    .nav-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--navy-light);
+      border: 2px solid var(--navy-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .nav-logout {
+      font-size: 0.88rem;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--navy-border);
+      border-radius: 6px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .nav-logout:hover { color: var(--white); border-color: var(--gray); }
+
+    /* ── APP SHELL ── */
+    .app-shell {
+      display: flex;
+      padding-top: 68px;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      background: var(--navy-dark);
+      border-right: 1px solid var(--navy-border);
+      position: fixed;
+      top: 68px;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 0;
+    }
+
+    .sidebar-section {
+      padding: 0 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .sidebar-label {
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-dim);
+      padding: 0 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 8px;
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .sidebar-link:hover { background: rgba(255,255,255,0.06); color: var(--white); }
+
+    .sidebar-link.active {
+      background: rgba(147,197,253,0.12);
+      color: var(--accent);
+    }
+
+    .sidebar-link svg {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      opacity: 0.75;
+    }
+
+    .sidebar-link.active svg { opacity: 1; }
+
+    .sidebar-divider {
+      border: none;
+      border-top: 1px solid var(--navy-border);
+      margin: 0.75rem 1rem;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 2.5rem 2.5rem 4rem;
+      min-height: calc(100vh - 68px);
+    }
+
+    /* ── GREETING ── */
+    .greeting-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .greeting-headline {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .greeting-date {
+      font-size: 0.88rem;
+      color: var(--gray);
+      margin-top: 0.25rem;
+    }
+
+    .btn-new-inspection {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.6rem 1.1rem;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-new-inspection:hover { background: var(--green-hover); }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--navy-border);
+      border-radius: 14px;
+      padding: 1.4rem 1.5rem;
+      transition: background 0.2s;
+    }
+
+    .stat-card:hover { background: rgba(255,255,255,0.09); }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--gray);
+      font-weight: 500;
+      margin-bottom: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-sub {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-heading {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--navy-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    thead th {
+      padding: 0.85rem 1.25rem;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray-dim);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(45, 111, 190, 0.3);
+      transition: background 0.15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.04); }
+
+    tbody td {
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      vertical-align: middle;
+    }
+
+    .td-address {
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .td-address span {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+
+    /* ── STATUS BADGES ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .badge-delivered {
+      background: rgba(34,197,94,0.12);
+      color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.25);
+    }
+
+    .badge-delivered::before { background: #4ade80; }
+
+    .badge-inprogress {
+      background: rgba(251,191,36,0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(251,191,36,0.25);
+    }
+
+    .badge-inprogress::before { background: #fbbf24; }
+
+    .badge-scheduled {
+      background: rgba(147,197,253,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(147,197,253,0.2);
+    }
+
+    .badge-scheduled::before { background: var(--accent); }
+
+    /* ── VIEW REPORT BUTTON ── */
+    .btn-view {
+      display: inline-block;
+      padding: 0.38rem 0.85rem;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(147,197,253,0.3);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-view:hover {
+      background: rgba(147,197,253,0.1);
+      border-color: var(--accent);
+    }
+
+    .btn-view-disabled {
+      color: var(--gray-dim);
+      border-color: rgba(100,116,139,0.2);
+      pointer-events: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; padding: 1.5rem 1rem 3rem; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 560px) {
+      .stats-row { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+      thead th:nth-child(2) { display: none; }
+      tbody td:nth-child(2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-inner">
+      <a href="homeinspector.html" class="logo">HomeInspector.com</a>
+      <div class="nav-user">
+        <span class="nav-user-name">George Stern</span>
+        <div class="nav-avatar">GS</div>
+        <a href="homeinspector.html" class="nav-logout">Log out</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+          Inspections
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Reports
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Clients
+        </a>
+      </div>
+
+      <hr class="sidebar-divider">
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Account</div>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+          Settings
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- GREETING -->
+      <div class="greeting-row">
+        <div>
+          <h1 class="greeting-headline">Welcome back, George 👋</h1>
+          <p class="greeting-date" id="todayDate"></p>
+        </div>
+        <a href="#" class="btn-new-inspection">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Inspection
+        </a>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Inspections This Month</div>
+          <div class="stat-value">14</div>
+          <div class="stat-sub">↑ 2 from last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Reports Delivered</div>
+          <div class="stat-value">14</div>
+          <div class="stat-sub">100% on time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg. Report Time</div>
+          <div class="stat-value">38<span style="font-size:1.1rem;font-weight:600;color:var(--gray);margin-left:3px;">min</span></div>
+          <div class="stat-sub">↓ 4 min vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg. Rating</div>
+          <div class="stat-value">4.9<span style="font-size:1.2rem;margin-left:2px;">★</span></div>
+          <div class="stat-sub">Based on 11 reviews</div>
+        </div>
+      </div>
+
+      <!-- RECENT INSPECTIONS -->
+      <div class="section-heading">Recent Inspections</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-address">
+                412 Willow Creek Dr
+                <span>Austin, TX 78701</span>
+              </td>
+              <td>Mar 26, 2026</td>
+              <td><span class="badge badge-delivered">Delivered</span></td>
+              <td><a href="reports.html" class="btn-view">View Report →</a></td>
+            </tr>
+            <tr>
+              <td class="td-address">
+                88 Ridgemont Ave
+                <span>Austin, TX 78745</span>
+              </td>
+              <td>Mar 24, 2026</td>
+              <td><span class="badge badge-delivered">Delivered</span></td>
+              <td><a href="reports.html" class="btn-view">View Report →</a></td>
+            </tr>
+            <tr>
+              <td class="td-address">
+                3301 Lakeside Blvd
+                <span>Austin, TX 78731</span>
+              </td>
+              <td>Mar 29, 2026</td>
+              <td><span class="badge badge-inprogress">In Progress</span></td>
+              <td><a href="#" class="btn-view btn-view-disabled">View Report →</a></td>
+            </tr>
+            <tr>
+              <td class="td-address">
+                117 Oakwood Ct
+                <span>Round Rock, TX 78664</span>
+              </td>
+              <td>Apr 1, 2026</td>
+              <td><span class="badge badge-scheduled">Scheduled</span></td>
+              <td><a href="#" class="btn-view btn-view-disabled">View Report →</a></td>
+            </tr>
+            <tr>
+              <td class="td-address">
+                2205 Sunrise Ln
+                <span>Cedar Park, TX 78613</span>
+              </td>
+              <td>Apr 3, 2026</td>
+              <td><span class="badge badge-scheduled">Scheduled</span></td>
+              <td><a href="#" class="btn-view btn-view-disabled">View Report →</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // Today's date
+    const dateEl = document.getElementById('todayDate');
+    const now = new Date();
+    dateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  </script>
+
+</body>
+</html>
