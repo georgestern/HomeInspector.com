@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — HomeInspector.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1B4F8A;
+      --navy-light: #1E5BA8;
+      --navy-border: #2d6fbe;
+      --accent: #93c5fd;
+      --blue-outline: #38bdf8;
+      --green: #22c55e;
+      --green-hover: #16a34a;
+      --white: #ffffff;
+      --gray: #94a3b8;
+      --gray-dim: #64748b;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(27, 79, 138, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .logo {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--white);
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-size: 1.27rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-item-dropdown { position: relative; }
+
+    .nav-dropdown {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+      padding: 0.4rem;
+      min-width: 330px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease 0.1s, transform 0.2s ease 0.1s;
+      z-index: 200;
+    }
+
+    .nav-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -18px; left: 0; right: 0;
+      height: 18px;
+    }
+
+    .nav-item-dropdown:hover .nav-dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-dropdown-item {
+      display: block;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .nav-dropdown-item:hover { background: #f1f5f9; }
+    .nav-dropdown-item::after { display: none; }
+
+    .nav-dropdown-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1B4F8A;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-dropdown-desc {
+      font-size: 0.78rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .btn-login {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-login:hover { color: var(--white); }
+
+    .btn-nav-trial {
+      padding: 0.5rem 1.1rem;
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-nav-trial:hover { background: rgba(255,255,255,0.14); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: var(--navy-light);
+      border-top: 1px solid var(--navy-border);
+      padding: 1rem 2rem 1.5rem;
+      gap: 1rem;
+    }
+
+    .mobile-menu a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--navy-border);
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover { color: var(--white); }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu.open { display: flex; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-actions { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ── PAGE ── */
+    .page-wrap {
+      padding-top: 68px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 4rem;
+    }
+
+    /* ── CARD ── */
+    .signup-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2.5rem 2.25rem 2rem;
+      width: 100%;
+      max-width: 520px;
+      margin: 2rem 1rem;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.35);
+      color: #0f172a;
+    }
+
+    /* ── STEP INDICATOR ── */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      transition: background 0.2s;
+    }
+
+    .step-dot.active {
+      background: var(--navy);
+      width: 28px;
+      border-radius: 999px;
+    }
+
+    /* ── HEADLINE ── */
+    .signup-headline {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #0f172a;
+      text-align: center;
+      letter-spacing: -0.4px;
+      margin-bottom: 0.4rem;
+    }
+
+    .signup-sub {
+      font-size: 0.95rem;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    /* ── SSO BUTTONS ── */
+    .sso-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-sso {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+      white-space: nowrap;
+      border: none;
+    }
+
+    .btn-sso:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .btn-google {
+      background: #ffffff;
+      color: #1e293b;
+      border: 1.5px solid #e2e8f0;
+    }
+
+    .btn-apple {
+      background: #111827;
+      color: #ffffff;
+    }
+
+    /* Google G icon */
+    .google-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* Apple icon */
+    .apple-icon {
+      width: 16px;
+      height: 18px;
+      flex-shrink: 0;
+      fill: #ffffff;
+    }
+
+    /* ── DIVIDER ── */
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
+
+    /* ── FORM ── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .form-field.half {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 0.7rem 0.95rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.93rem;
+      color: #0f172a;
+      background: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder,
+    input[type="tel"]::placeholder {
+      color: #94a3b8;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(27,79,138,0.12);
+      background: #fff;
+    }
+
+    /* ── CHECKBOX ── */
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      margin-top: 1px;
+      flex-shrink: 0;
+      accent-color: var(--navy);
+      cursor: pointer;
+    }
+
+    .checkbox-label {
+      font-size: 0.85rem;
+      color: #374151;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    /* ── NEXT BUTTON ── */
+    .btn-next {
+      display: block;
+      width: 100%;
+      padding: 0.95rem;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s, transform 0.15s, opacity 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-next:not(:disabled):hover {
+      background: var(--green-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-next:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    /* ── LEGAL ── */
+    .legal-text {
+      margin-top: 1rem;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .legal-text a {
+      color: var(--navy);
+      text-decoration: underline;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 560px) {
+      .sso-row { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .signup-card { padding: 2rem 1.25rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-inner">
+      <a href="homeinspector.html" class="logo">HomeInspector.com</a>
+
+      <ul class="nav-links">
+        <li class="nav-item-dropdown">
+          <a href="#">Product</a>
+          <div class="nav-dropdown">
+            <a href="software.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Software</div>
+              <div class="nav-dropdown-desc">Report writing, business management, and more for every type of home inspector</div>
+            </a>
+            <a href="website.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Website</div>
+              <div class="nav-dropdown-desc">Stand-alone websites that get you more business</div>
+            </a>
+          </div>
+        </li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="#" class="btn-login">Log in</a>
+        <a href="signup.html" class="btn-nav-trial">Sign-up for Free</a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#">Product</a>
+      <a href="#">Pricing</a>
+      <a href="#">Reports</a>
+      <a href="#">About</a>
+      <a href="#">Log in</a>
+      <a href="signup.html">Sign-up for Free</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="signup-card">
+
+      <!-- Step indicator -->
+      <div class="step-indicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="signup-headline">Create your free account</h1>
+      <p class="signup-sub">Choose how you'd like to sign in</p>
+
+      <!-- SSO buttons -->
+      <div class="sso-row">
+        <button class="btn-sso btn-google" type="button">
+          <svg class="google-icon" viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="9" r="9" fill="#fff"/>
+            <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+            <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+            <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+          </svg>
+          Sign in with Google
+        </button>
+
+        <button class="btn-sso btn-apple" type="button">
+          <svg class="apple-icon" viewBox="0 0 14 17" fill="none">
+            <path d="M13.197 12.897c-.264.61-.577 1.171-.94 1.686-.494.705-.898 1.193-1.208 1.462-.483.444-1 .671-1.554.683-.398 0-.878-.113-1.437-.342-.56-.228-1.074-.341-1.543-.341-.492 0-1.02.113-1.588.341-.569.229-1.027.348-1.378.36-.532.022-1.06-.212-1.587-.702-.336-.29-.757-.797-1.263-1.523C.199 13.723-.226 12.645-.226 11.53c0-1.187.258-2.21.774-3.066a4.527 4.527 0 0 1 1.612-1.63 4.33 4.33 0 0 1 2.177-.614c.427 0 .987.132 1.682.392.693.26 1.138.393 1.333.393.146 0 .642-.155 1.483-.463.795-.286 1.466-.404 2.015-.357 1.489.12 2.608.708 3.35 1.768-1.33.807-1.988 1.937-1.975 3.385.012 1.128.421 2.067 1.224 2.812.364.345.77.613 1.22.802l-.253.645zM10.12.34c0 .884-.323 1.71-.965 2.475-.776.908-1.714 1.433-2.73 1.351a2.745 2.745 0 0 1-.021-.335c0-.848.369-1.755 1.025-2.496.327-.376.742-.688 1.246-.937C9.177.15 9.654.013 10.1 0c.013.114.02.228.02.34z" fill="white"/>
+          </svg>
+          Sign in with Apple
+        </button>
+      </div>
+
+      <!-- OR divider -->
+      <div class="or-divider">OR</div>
+
+      <!-- Form -->
+      <form id="signupForm" novalidate>
+
+        <div class="form-row">
+          <div class="form-field half">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="James" required>
+          </div>
+          <div class="form-field half">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Mitchell" required>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="james@mitchellinspections.com" required>
+        </div>
+
+        <div class="form-field">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000">
+        </div>
+
+        <!-- SMS checkbox -->
+        <div class="checkbox-row">
+          <input type="checkbox" id="smsConsent" name="smsConsent">
+          <label class="checkbox-label" for="smsConsent">
+            Yes, I'd like to receive updates via text/SMS from HomeInspector
+          </label>
+        </div>
+
+        <!-- Next button -->
+        <button type="submit" class="btn-next" id="nextBtn" disabled>Next</button>
+
+      </form>
+
+      <!-- Legal -->
+      <p class="legal-text">
+        By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.<br>
+        SMS messages are sent for account updates and product information. Message &amp; data rates may apply.
+        Reply STOP to opt out at any time. See our <a href="#">SMS Terms</a> for details.
+      </p>
+
+    </div>
+  </div>
+
+  <script>
+    // Navbar hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+
+    // Enable Next button when required fields are filled
+    const firstName = document.getElementById('firstName');
+    const lastName  = document.getElementById('lastName');
+    const email     = document.getElementById('email');
+    const nextBtn   = document.getElementById('nextBtn');
+
+    function validateForm() {
+      const emailValid = email.value.includes('@') && email.value.includes('.');
+      nextBtn.disabled = !(firstName.value.trim() && lastName.value.trim() && emailValid);
+    }
+
+    [firstName, lastName, email].forEach(el => el.addEventListener('input', validateForm));
+  </script>
+
+</body>
+</html>
