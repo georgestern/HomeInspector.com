@@ -6,7 +6,7 @@
   <title>HomeInspector.com</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -70,12 +70,96 @@
     .nav-links a {
       color: var(--gray);
       text-decoration: none;
-      font-size: 0.95rem;
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-size: 1.27rem;
       transition: color 0.2s;
       white-space: nowrap;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.25s ease;
     }
 
     .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── PRODUCTS DROPDOWN ── */
+    .nav-item-dropdown {
+      position: relative;
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+      padding: 0.4rem;
+      min-width: 330px;
+      opacity: 0;
+      pointer-events: none;
+      /* 100ms delay only on hide so accidental mouse movements don't close it */
+      transition: opacity 0.2s ease 0.1s, transform 0.2s ease 0.1s;
+      z-index: 200;
+    }
+
+    /* invisible bridge fills the gap between trigger and dropdown card */
+    .nav-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -18px;
+      left: 0;
+      right: 0;
+      height: 18px;
+    }
+
+    .nav-item-dropdown:hover .nav-dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+      /* no delay on show */
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-dropdown-item {
+      display: block;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .nav-dropdown-item:hover {
+      background: #f1f5f9;
+    }
+
+    /* suppress the underline animation inside the dropdown */
+    .nav-dropdown-item::after { display: none; }
+
+    .nav-dropdown-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1B4F8A;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-dropdown-desc {
+      font-size: 0.78rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
 
     .nav-actions {
       display: flex;
@@ -1006,7 +1090,19 @@
       <a href="#" class="logo">HomeInspector.com</a>
 
       <ul class="nav-links">
-        <li><a href="#">Features</a></li>
+        <li class="nav-item-dropdown">
+          <a href="#">Product</a>
+          <div class="nav-dropdown">
+            <a href="software.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Software</div>
+              <div class="nav-dropdown-desc">Report writing, business management, and more for every type of home inspector</div>
+            </a>
+            <a href="#" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Website</div>
+              <div class="nav-dropdown-desc">Stand-alone websites that get you more business</div>
+            </a>
+          </div>
+        </li>
         <li><a href="#">Pricing</a></li>
         <li><a href="#">Reports</a></li>
         <li><a href="#">About</a></li>
@@ -1014,7 +1110,7 @@
 
       <div class="nav-actions">
         <a href="#" class="btn-login">Log in</a>
-        <a href="#" class="btn-nav-trial">Start Free Trial</a>
+        <a href="#" class="btn-nav-trial">Sign-up for Free</a>
       </div>
 
       <button class="hamburger" id="hamburger" aria-label="Open menu">
@@ -1023,12 +1119,12 @@
     </div>
 
     <div class="mobile-menu" id="mobileMenu">
-      <a href="#">Features</a>
+      <a href="#">Product</a>
       <a href="#">Pricing</a>
       <a href="#">Reports</a>
       <a href="#">About</a>
       <a href="#">Log in</a>
-      <a href="#">Start Free Trial</a>
+      <a href="#">Sign-up for Free</a>
     </div>
   </nav>
 
@@ -1050,7 +1146,7 @@
         </p>
 
         <div class="hero-ctas">
-          <a href="#" class="btn-trial">Start Free Trial</a>
+          <a href="#" class="btn-trial">Sign-up for Free</a>
           <a href="#" class="btn-demo">
             <span class="play-icon">&#9654;</span>
             Watch a Demo

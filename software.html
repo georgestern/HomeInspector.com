@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Software — HomeInspector.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1B4F8A;
+      --navy-light: #1E5BA8;
+      --navy-border: #2d6fbe;
+      --accent: #93c5fd;
+      --blue-outline: #38bdf8;
+      --green: #22c55e;
+      --green-hover: #16a34a;
+      --white: #ffffff;
+      --gray: #94a3b8;
+      --gray-dim: #64748b;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(27, 79, 138, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .logo {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--white);
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-size: 1.27rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── PRODUCTS DROPDOWN ── */
+    .nav-item-dropdown { position: relative; }
+
+    .nav-dropdown {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+      padding: 0.4rem;
+      min-width: 330px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease 0.1s, transform 0.2s ease 0.1s;
+      z-index: 200;
+    }
+
+    .nav-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -18px;
+      left: 0;
+      right: 0;
+      height: 18px;
+    }
+
+    .nav-item-dropdown:hover .nav-dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-dropdown-item {
+      display: block;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .nav-dropdown-item:hover { background: #f1f5f9; }
+    .nav-dropdown-item::after { display: none; }
+
+    .nav-dropdown-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1B4F8A;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-dropdown-desc {
+      font-size: 0.78rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .btn-login {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-login:hover { color: var(--white); }
+
+    .btn-nav-trial {
+      padding: 0.5rem 1.1rem;
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-nav-trial:hover { background: rgba(255,255,255,0.14); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: var(--navy-light);
+      border-top: 1px solid var(--navy-border);
+      padding: 1rem 2rem 1.5rem;
+      gap: 1rem;
+    }
+
+    .mobile-menu a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--navy-border);
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover { color: var(--white); }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu.open { display: flex; }
+
+    /* ── LAPTOP MOCKUP ── */
+    .devices-container {
+      position: relative;
+      display: inline-block;
+      padding-right: 85px;
+    }
+
+    .laptop-wrap {
+      width: 360px;
+      position: relative;
+    }
+
+    .laptop-screen {
+      background: #0a1929;
+      border: 2px solid #253c52;
+      border-radius: 10px 10px 0 0;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+    }
+
+    .browser-chrome {
+      background: #0f2233;
+      border-bottom: 1px solid #1d3347;
+      padding: 0.45rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .browser-dots { display: flex; gap: 5px; flex-shrink: 0; }
+
+    .browser-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .dot-red    { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green  { background: #28c840; }
+
+    .browser-url {
+      flex: 1;
+      background: #1B4F8A;
+      border: 1px solid #253c52;
+      border-radius: 4px;
+      padding: 0.22rem 0.65rem;
+      font-size: 0.65rem;
+      color: var(--gray-dim);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .url-lock { width: 9px; height: 9px; flex-shrink: 0; opacity: 0.5; }
+
+    .app-layout {
+      display: flex;
+      height: 240px;
+    }
+
+    .app-sidebar {
+      width: 100px;
+      background: #091c2e;
+      border-right: 1px solid #1a3045;
+      display: flex;
+      flex-direction: column;
+      padding: 0.85rem 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-label {
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gray-dim);
+      padding: 0 0.75rem 0.5rem;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.48rem 0.75rem;
+      font-size: 0.67rem;
+      font-weight: 500;
+      color: var(--gray);
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .sidebar-item:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+
+    .sidebar-item.active {
+      background: rgba(147,197,253,0.08);
+      color: var(--accent);
+      border-left-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .sidebar-item svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+    .sidebar-divider { height: 1px; background: #1a3045; margin: 0.4rem 0; }
+
+    .app-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .app-topbar {
+      padding: 0.5rem 0.85rem;
+      border-bottom: 1px solid #1a3045;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-topbar-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .app-topbar-sub {
+      font-size: 0.58rem;
+      color: var(--gray-dim);
+      margin-top: 1px;
+    }
+
+    .app-status-pill {
+      font-size: 0.58rem;
+      font-weight: 600;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.12);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.2);
+    }
+
+    .app-content {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .house-photo {
+      width: 115px;
+      flex-shrink: 0;
+      background: linear-gradient(160deg, #1a3a55 0%, #0d2a40 40%, #0a1f30 100%);
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 0.5rem;
+    }
+
+    .house-svg-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.18;
+    }
+
+    .house-svg-wrap svg { width: 80px; height: 65px; }
+
+    .photo-caption {
+      position: relative;
+      z-index: 1;
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.3;
+    }
+
+    .report-details {
+      flex: 1;
+      padding: 0.65rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      overflow: hidden;
+    }
+
+    .inspector-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .inspector-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e4060, #2a5a80);
+      border: 1px solid #2a4a65;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.58rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .inspector-name {
+      font-size: 0.67rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .inspector-role {
+      font-size: 0.55rem;
+      color: var(--gray-dim);
+    }
+
+    .report-meta {
+      font-size: 0.58rem;
+      color: var(--gray-dim);
+      display: flex;
+      gap: 0.55rem;
+    }
+
+    .report-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .score-circles {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: auto;
+    }
+
+    .score-circle-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .score-circle {
+      position: relative;
+      width: 50px;
+      height: 50px;
+    }
+
+    .score-circle svg {
+      width: 50px;
+      height: 50px;
+      transform: rotate(-90deg);
+    }
+
+    .score-circle .track {
+      fill: none;
+      stroke: rgba(255,255,255,0.06);
+      stroke-width: 4;
+    }
+
+    .score-circle .fill-blue {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 119;
+      stroke-dashoffset: 0;
+    }
+
+    .score-circle .fill-orange {
+      fill: none;
+      stroke: #fb923c;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 119;
+      stroke-dashoffset: 43;
+    }
+
+    .score-circle-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-circle-num {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .score-circle-label {
+      font-size: 0.48rem;
+      color: var(--gray-dim);
+      text-align: center;
+      line-height: 1.2;
+      max-width: 50px;
+    }
+
+    .laptop-base {
+      height: 14px;
+      background: linear-gradient(to bottom, #1a3a55, #0f2840);
+      border: 2px solid #253c52;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .laptop-notch {
+      width: 40px;
+      height: 3px;
+      background: #1a3a55;
+      border-radius: 0 0 3px 3px;
+    }
+
+    .laptop-stand {
+      width: 90px;
+      height: 8px;
+      background: linear-gradient(to bottom, #0f2840, #0a1f30);
+      border: 2px solid #1a3045;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      margin: 0 auto;
+    }
+
+    /* ── IPHONE MOCKUP ── */
+    .phone-wrap {
+      width: 135px;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+
+    .phone-shell {
+      background: #0b1e30;
+      border: 2px solid #2a4a65;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: -12px 24px 60px rgba(0,0,0,0.7), -4px 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05) inset;
+      position: relative;
+    }
+
+    .phone-island {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 44px;
+      height: 10px;
+      background: #000;
+      border-radius: 999px;
+      z-index: 10;
+    }
+
+    .phone-screen {
+      background: #0a1929;
+      margin: 0;
+      padding-top: 28px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phone-topbar {
+      padding: 0.5rem 0.75rem 0.4rem;
+      border-bottom: 1px solid #1a3045;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .phone-topbar-title {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .phone-topbar-sub {
+      font-size: 0.5rem;
+      color: var(--gray-dim);
+      margin-top: 1px;
+    }
+
+    .phone-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 4px rgba(34,197,94,0.6);
+    }
+
+    .phone-photo {
+      height: 64px;
+      background: linear-gradient(160deg, #1a3a55 0%, #0d2a40 50%, #091c2e 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .phone-photo svg { opacity: 0.2; }
+
+    .phone-photo-label {
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+      font-size: 0.5rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .phone-content {
+      flex: 1;
+      padding: 0.65rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .phone-inspector-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .phone-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e4060, #2a5a80);
+      border: 1px solid #2a4a65;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.52rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .phone-inspector-name {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .phone-inspector-role {
+      font-size: 0.5rem;
+      color: var(--gray-dim);
+    }
+
+    .phone-scores {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      padding: 0.25rem 0;
+    }
+
+    .phone-score-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .phone-score-circle {
+      position: relative;
+      width: 42px;
+      height: 42px;
+    }
+
+    .phone-score-circle svg {
+      width: 42px;
+      height: 42px;
+      transform: rotate(-90deg);
+    }
+
+    .phone-score-circle .track {
+      fill: none;
+      stroke: rgba(255,255,255,0.06);
+      stroke-width: 4;
+    }
+
+    .phone-score-circle .fill-blue {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 113;
+      stroke-dashoffset: 0;
+    }
+
+    .phone-score-circle .fill-orange {
+      fill: none;
+      stroke: #fb923c;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 113;
+      stroke-dashoffset: 41;
+    }
+
+    .phone-score-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .phone-score-num {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .phone-score-label {
+      font-size: 0.42rem;
+      color: var(--gray-dim);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .phone-navbar {
+      border-top: 1px solid #1a3045;
+      padding: 0.45rem 0.5rem;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: #091c2e;
+    }
+
+    .phone-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.42rem;
+      color: var(--gray-dim);
+      cursor: pointer;
+    }
+
+    .phone-nav-item.active { color: var(--accent); }
+    .phone-nav-item svg { width: 13px; height: 13px; }
+
+    .phone-home-bar {
+      height: 18px;
+      background: #0a1929;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .phone-home-bar span {
+      width: 36px;
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 999px;
+    }
+
+    /* ── PAGE ── */
+    .page-wrap {
+      padding-top: 68px;
+    }
+
+    /* ── PAGE HEADLINE ── */
+    .features-header {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .features-eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.1rem;
+    }
+
+    .features-headline {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      color: var(--white);
+    }
+
+    /* ── ALTERNATING FEATURE SECTIONS ── */
+    .features-list {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6rem;
+    }
+
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 5rem;
+    }
+
+    .feature-row.reverse { direction: rtl; }
+    .feature-row.reverse > * { direction: ltr; }
+
+    /* ── FEATURE DEVICE COLUMN ── */
+    .feature-device-col {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+    }
+
+    /* ── TEXT COLUMN ── */
+    .feature-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .feature-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .feature-subheading {
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+      color: var(--white);
+    }
+
+    .feature-body {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--gray);
+      max-width: 480px;
+    }
+
+    .feature-bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      list-style: none;
+    }
+
+    .feature-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .feature-bullets li::before {
+      content: '';
+      flex-shrink: 0;
+      margin-top: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(34,197,94,0.15);
+      border: 1.5px solid rgba(34,197,94,0.5);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 6l2.5 2.5 4.5-5' stroke='%2322c55e' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 12px 12px;
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider {
+      max-width: 1200px;
+      margin: 0 auto;
+      border: none;
+      border-top: 1px solid var(--navy-border);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-actions { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    @media (max-width: 960px) {
+      .feature-row,
+      .feature-row.reverse {
+        grid-template-columns: 1fr;
+        direction: ltr;
+        gap: 2.5rem;
+      }
+
+      .features-list { gap: 4rem; }
+
+      .phone-wrap { display: none; }
+      .devices-container { padding-right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-inner">
+      <a href="homeinspector.html" class="logo">HomeInspector.com</a>
+
+      <ul class="nav-links">
+        <li class="nav-item-dropdown">
+          <a href="#">Product</a>
+          <div class="nav-dropdown">
+            <a href="software.html" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Software</div>
+              <div class="nav-dropdown-desc">Report writing, business management, and more for every type of home inspector</div>
+            </a>
+            <a href="#" class="nav-dropdown-item">
+              <div class="nav-dropdown-title">Website</div>
+              <div class="nav-dropdown-desc">Stand-alone websites that get you more business</div>
+            </a>
+          </div>
+        </li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="#" class="btn-login">Log in</a>
+        <a href="#" class="btn-nav-trial">Sign-up for Free</a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#">Product</a>
+      <a href="#">Pricing</a>
+      <a href="#">Reports</a>
+      <a href="#">About</a>
+      <a href="#">Log in</a>
+      <a href="#">Sign-up for Free</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+
+    <!-- PAGE HEADLINE -->
+    <header class="features-header">
+      <span class="features-eyebrow">Software</span>
+      <h1 class="features-headline">Report Writing Built<br>for Real Inspectors</h1>
+    </header>
+
+    <!-- FEATURE ROWS -->
+    <div class="features-list">
+
+      <!-- ROW 1: device left, text right -->
+      <div class="feature-row">
+
+        <div class="feature-device-col">
+          <div class="devices-container">
+            <div class="laptop-wrap">
+              <div class="laptop-screen">
+                <div class="browser-chrome">
+                  <div class="browser-dots">
+                    <span class="dot-red"></span>
+                    <span class="dot-yellow"></span>
+                    <span class="dot-green"></span>
+                  </div>
+                  <div class="browser-url">
+                    <svg class="url-lock" viewBox="0 0 16 16" fill="none">
+                      <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/>
+                      <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    app.homeinspector.com/reports/4821
+                  </div>
+                </div>
+                <div class="app-layout">
+                  <div class="app-sidebar">
+                    <div class="sidebar-label">Sections</div>
+                    <div class="sidebar-item active">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+                      Roof
+                    </div>
+                    <div class="sidebar-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                      Electrical
+                    </div>
+                    <div class="sidebar-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6 9 4 13.5 4 16a8 8 0 0 0 16 0c0-2.5-2-7-8-14z"/></svg>
+                      Plumbing
+                    </div>
+                    <div class="sidebar-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+                      HVAC
+                    </div>
+                    <div class="sidebar-divider"></div>
+                    <div class="sidebar-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                      Interior
+                    </div>
+                    <div class="sidebar-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+                      Exterior
+                    </div>
+                  </div>
+                  <div class="app-main">
+                    <div class="app-topbar">
+                      <div>
+                        <div class="app-topbar-title">123 Maple Street, Austin TX</div>
+                        <div class="app-topbar-sub">Inspection Report · Mar 28, 2026</div>
+                      </div>
+                      <span class="app-status-pill">In Progress</span>
+                    </div>
+                    <div class="app-content">
+                      <div class="house-photo">
+                        <div class="house-svg-wrap">
+                          <svg viewBox="0 0 120 95" fill="none">
+                            <polygon points="60,5 115,40 5,40" fill="white"/>
+                            <rect x="10" y="38" width="100" height="55" fill="white"/>
+                            <rect x="45" y="60" width="30" height="33" fill="#1B4F8A"/>
+                            <rect x="18" y="50" width="20" height="18" fill="#1B4F8A"/>
+                            <rect x="82" y="50" width="20" height="18" fill="#1B4F8A"/>
+                          </svg>
+                        </div>
+                        <div class="photo-caption">Front elevation<br>123 Maple St.</div>
+                      </div>
+                      <div class="report-details">
+                        <div class="inspector-row">
+                          <div class="inspector-avatar">JM</div>
+                          <div>
+                            <div class="inspector-name">James Mitchell</div>
+                            <div class="inspector-role">Certified Home Inspector</div>
+                          </div>
+                        </div>
+                        <div class="report-meta">
+                          <span>
+                            <svg width="8" height="8" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#64748b" stroke-width="2"/><path d="M8 5v3l2 2" stroke="#64748b" stroke-width="2" stroke-linecap="round"/></svg>
+                            3h 22m
+                          </span>
+                          <span>
+                            <svg width="8" height="8" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="12" rx="1" stroke="#64748b" stroke-width="2"/><path d="M5 1v4M11 1v4M2 7h12" stroke="#64748b" stroke-width="2" stroke-linecap="round"/></svg>
+                            Mar 28, 2026
+                          </span>
+                        </div>
+                        <div class="score-circles">
+                          <div class="score-circle-wrap">
+                            <div class="score-circle">
+                              <svg viewBox="0 0 50 50"><circle class="track" cx="25" cy="25" r="19"/><circle class="fill-blue" cx="25" cy="25" r="19"/></svg>
+                              <div class="score-circle-inner"><span class="score-circle-num">74</span></div>
+                            </div>
+                            <div class="score-circle-label">Items<br>Inspected</div>
+                          </div>
+                          <div class="score-circle-wrap">
+                            <div class="score-circle">
+                              <svg viewBox="0 0 50 50"><circle class="track" cx="25" cy="25" r="19"/><circle class="fill-orange" cx="25" cy="25" r="19"/></svg>
+                              <div class="score-circle-inner"><span class="score-circle-num">56</span></div>
+                            </div>
+                            <div class="score-circle-label">Deficien-<br>cies</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="laptop-base"><div class="laptop-notch"></div></div>
+              <div class="laptop-stand"></div>
+            </div>
+
+            <!-- IPHONE -->
+            <div class="phone-wrap">
+              <div class="phone-shell">
+                <div class="phone-island"></div>
+                <div class="phone-screen">
+                  <div class="phone-topbar">
+                    <div>
+                      <div class="phone-topbar-title">123 Maple Street</div>
+                      <div class="phone-topbar-sub">Mar 28, 2026</div>
+                    </div>
+                    <div class="phone-status-dot"></div>
+                  </div>
+                  <div class="phone-photo">
+                    <svg width="70" height="52" viewBox="0 0 120 95" fill="none">
+                      <polygon points="60,5 115,40 5,40" fill="white"/>
+                      <rect x="10" y="38" width="100" height="55" fill="white"/>
+                      <rect x="45" y="60" width="30" height="33" fill="#091c2e"/>
+                      <rect x="18" y="50" width="20" height="18" fill="#091c2e"/>
+                      <rect x="82" y="50" width="20" height="18" fill="#091c2e"/>
+                    </svg>
+                    <div class="phone-photo-label">Front elevation</div>
+                  </div>
+                  <div class="phone-content">
+                    <div class="phone-inspector-row">
+                      <div class="phone-avatar">JM</div>
+                      <div>
+                        <div class="phone-inspector-name">James Mitchell</div>
+                        <div class="phone-inspector-role">Certified Inspector</div>
+                      </div>
+                    </div>
+                    <div class="phone-scores">
+                      <div class="phone-score-wrap">
+                        <div class="phone-score-circle">
+                          <svg viewBox="0 0 48 48"><circle class="track" cx="24" cy="24" r="18"/><circle class="fill-blue" cx="24" cy="24" r="18"/></svg>
+                          <div class="phone-score-inner"><span class="phone-score-num">74</span></div>
+                        </div>
+                        <div class="phone-score-label">Items<br>Inspected</div>
+                      </div>
+                      <div class="phone-score-wrap">
+                        <div class="phone-score-circle">
+                          <svg viewBox="0 0 48 48"><circle class="track" cx="24" cy="24" r="18"/><circle class="fill-orange" cx="24" cy="24" r="18"/></svg>
+                          <div class="phone-score-inner"><span class="phone-score-num">56</span></div>
+                        </div>
+                        <div class="phone-score-label">Deficien-<br>cies</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="phone-navbar">
+                    <div class="phone-nav-item active">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/></svg>
+                      Report
+                    </div>
+                    <div class="phone-nav-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                      Items
+                    </div>
+                    <div class="phone-nav-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                      Client
+                    </div>
+                    <div class="phone-nav-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+                      More
+                    </div>
+                  </div>
+                  <div class="phone-home-bar"><span></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-text">
+          <div class="feature-tag">Report Writing</div>
+          <h2 class="feature-subheading">Deliver Reports That Make Agents Remember You</h2>
+          <p class="feature-body">Create same-day reports that are easy to read. Our interactive web-based reports emphasize what matters most — clean layouts, easy navigation, and tools that make your clients and agents trust you instantly.</p>
+          <ul class="feature-bullets">
+            <li>Clean, professional layouts agents recognize and trust</li>
+            <li>Web and PDF reports delivered instantly</li>
+            <li>Mobile-first tools built for inspectors in the field</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <hr class="section-divider">
+
+      <!-- ROW 2: text left, device right -->
+      <div class="feature-row reverse">
+
+        <div class="feature-device-col">
+          <div class="devices-container">
+            <div class="laptop-wrap">
+              <div class="laptop-screen">
+                <div class="browser-chrome">
+                  <div class="browser-dots">
+                    <span class="dot-red"></span>
+                    <span class="dot-yellow"></span>
+                    <span class="dot-green"></span>
+                  </div>
+                  <div class="browser-url">
+                    <svg class="url-lock" viewBox="0 0 16 16" fill="none">
+                      <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/>
+                      <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    app.homeinspector.com/schedule
+                  </div>
+                </div>
+                <div class="app-layout">
+                  <div class="app-sidebar">
+                    <div class="sidebar-label">Menu</div>
+                    <div class="sidebar-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                      Schedule
+                    </div>
+                    <div class="sidebar-item active">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                      Clients
+                    </div>
+                    <div class="sidebar-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                      Invoices
+                    </div>
+                    <div class="sidebar-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+                      Reports
+                    </div>
+                    <div class="sidebar-divider"></div>
+                    <div class="sidebar-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+                      Settings
+                    </div>
+                  </div>
+                  <div class="app-main">
+                    <div class="app-topbar">
+                      <div>
+                        <div class="app-topbar-title">Client Dashboard</div>
+                        <div class="app-topbar-sub">12 active clients · 3 pending invoices</div>
+                      </div>
+                      <span class="app-status-pill">3 Pending</span>
+                    </div>
+                    <div class="app-content">
+                      <div class="house-photo">
+                        <div class="house-svg-wrap">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                          </svg>
+                        </div>
+                        <div class="photo-caption">12 Clients<br>Active</div>
+                      </div>
+                      <div class="report-details">
+                        <div class="inspector-row">
+                          <div class="inspector-avatar">SC</div>
+                          <div>
+                            <div class="inspector-name">Sarah Chen</div>
+                            <div class="inspector-role">Pending Invoice · $325</div>
+                          </div>
+                        </div>
+                        <div class="report-meta">
+                          <span>
+                            <svg width="8" height="8" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="12" rx="1" stroke="#64748b" stroke-width="2"/><path d="M5 1v4M11 1v4M2 7h12" stroke="#64748b" stroke-width="2" stroke-linecap="round"/></svg>
+                            Due Apr 4, 2026
+                          </span>
+                          <span>
+                            <svg width="8" height="8" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#64748b" stroke-width="2"/><path d="M8 5v3l2 2" stroke="#64748b" stroke-width="2" stroke-linecap="round"/></svg>
+                            2 days left
+                          </span>
+                        </div>
+                        <div class="score-circles">
+                          <div class="score-circle-wrap">
+                            <div class="score-circle">
+                              <svg viewBox="0 0 50 50"><circle class="track" cx="25" cy="25" r="19"/><circle class="fill-blue" cx="25" cy="25" r="19"/></svg>
+                              <div class="score-circle-inner"><span class="score-circle-num">12</span></div>
+                            </div>
+                            <div class="score-circle-label">Active<br>Clients</div>
+                          </div>
+                          <div class="score-circle-wrap">
+                            <div class="score-circle">
+                              <svg viewBox="0 0 50 50"><circle class="track" cx="25" cy="25" r="19"/><circle class="fill-orange" cx="25" cy="25" r="19"/></svg>
+                              <div class="score-circle-inner"><span class="score-circle-num">3</span></div>
+                            </div>
+                            <div class="score-circle-label">Pending<br>Invoices</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="laptop-base"><div class="laptop-notch"></div></div>
+              <div class="laptop-stand"></div>
+            </div>
+
+            <!-- IPHONE -->
+            <div class="phone-wrap">
+              <div class="phone-shell">
+                <div class="phone-island"></div>
+                <div class="phone-screen">
+                  <div class="phone-topbar">
+                    <div>
+                      <div class="phone-topbar-title">Sarah Chen</div>
+                      <div class="phone-topbar-sub">Invoice due Apr 4</div>
+                    </div>
+                    <div class="phone-status-dot"></div>
+                  </div>
+                  <div class="phone-photo" style="background: linear-gradient(160deg, #1a3a55 0%, #0d2a40 50%, #091c2e 100%);">
+                    <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <div class="phone-photo-label">Client profile</div>
+                  </div>
+                  <div class="phone-content">
+                    <div class="phone-inspector-row">
+                      <div class="phone-avatar">SC</div>
+                      <div>
+                        <div class="phone-inspector-name">Sarah Chen</div>
+                        <div class="phone-inspector-role">Pending · $325</div>
+                      </div>
+                    </div>
+                    <div class="phone-scores">
+                      <div class="phone-score-wrap">
+                        <div class="phone-score-circle">
+                          <svg viewBox="0 0 48 48"><circle class="track" cx="24" cy="24" r="18"/><circle class="fill-blue" cx="24" cy="24" r="18"/></svg>
+                          <div class="phone-score-inner"><span class="phone-score-num">12</span></div>
+                        </div>
+                        <div class="phone-score-label">Active<br>Clients</div>
+                      </div>
+                      <div class="phone-score-wrap">
+                        <div class="phone-score-circle">
+                          <svg viewBox="0 0 48 48"><circle class="track" cx="24" cy="24" r="18"/><circle class="fill-orange" cx="24" cy="24" r="18"/></svg>
+                          <div class="phone-score-inner"><span class="phone-score-num">3</span></div>
+                        </div>
+                        <div class="phone-score-label">Pending<br>Invoices</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="phone-navbar">
+                    <div class="phone-nav-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                      Schedule
+                    </div>
+                    <div class="phone-nav-item active">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                      Clients
+                    </div>
+                    <div class="phone-nav-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                      Invoices
+                    </div>
+                    <div class="phone-nav-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+                      More
+                    </div>
+                  </div>
+                  <div class="phone-home-bar"><span></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-text">
+          <div class="feature-tag">Business Management</div>
+          <h2 class="feature-subheading">Run Your Business from a Single Dashboard</h2>
+          <p class="feature-body">Scheduling, invoicing, client communication — all in one place. Spend less time on admin work and more time doing what you're good at.</p>
+          <ul class="feature-bullets">
+            <li>Online booking that syncs with your calendar</li>
+            <li>Automated reminders and follow-ups</li>
+            <li>Invoicing and payments built right in</li>
+            <li>Client portal for easy report delivery</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  </script>
+
+</body>
+</html>
